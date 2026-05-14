@@ -8,7 +8,7 @@ from typing import Any
 
 import requests
 
-DEFAULT_API_BASE_URL = "http://127.0.0.1:8000"
+DEFAULT_API_BASE_URL = "https://gurgaon-real-estate-ml-production.up.railway.app"
 DEFAULT_TIMEOUT_SECONDS = 8.0
 
 
