@@ -1,3 +1,8 @@
+import sys
+from pathlib import Path
+
+ROOT_DIR = Path(__file__).resolve().parent.parent
+sys.path.append(str(ROOT_DIR))
 """Premium Streamlit frontend for the Gurgaon Real Estate ML platform."""
 
 from __future__ import annotations
@@ -6,7 +11,7 @@ from pathlib import Path
 
 import streamlit as st
 
-from components.sidebar import render_sidebar
+from app.components.sidebar import render_sidebar
 from app.pages import (
     analytics,
     dashboard,
@@ -25,7 +30,7 @@ PAGE_RENDERERS = {
 def load_css() -> None:
     """Load the shared CSS stylesheet."""
 
-    css_path = Path("assets/styles.css")
+    css_path = Path("app/assets/styles.css")
     if css_path.exists():
         st.markdown(f"<style>{css_path.read_text(encoding='utf-8')}</style>", unsafe_allow_html=True)
 
@@ -44,7 +49,7 @@ def main() -> None:
 
     st.set_page_config(
         page_title="Gurgaon Real Estate ML",
-        page_icon="assets/logo.png",
+        page_icon="app/assets/logo.png",
         layout="wide",
         initial_sidebar_state="expanded",
     )
