@@ -1,0 +1,17 @@
+training:
+  data_path: data/processed/gurgaon_properties_post_feature_selection_v2.csv
+  target: price
+  test_size: 0.2
+  random_state: 42
+
+model:
+  name: random_forest
+  n_estimators: 500
+  target_transform: log1p
+
+artifacts:
+  model_path: models/price_model.joblib
+  metadata_path: models/model_metadata.json
+  metrics_path: reports/metrics/model_metrics.json
+  feature_importance_path: reports/metrics/feature_importance.csv
+

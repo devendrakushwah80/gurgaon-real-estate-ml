@@ -1,0 +1,22 @@
+services:
+  api:
+    build:
+      context: ../..
+      dockerfile: deployment/docker/Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - ENVIRONMENT=docker
+      - MODEL_PATH=models/price_model.joblib
+
+  streamlit:
+    build:
+      context: ../..
+      dockerfile: deployment/docker/Dockerfile
+    command: streamlit run app/streamlit_app.py --server.address 0.0.0.0 --server.port 8501
+    ports:
+      - "8501:8501"
+    environment:
+      - ENVIRONMENT=docker
+      - MODEL_PATH=models/price_model.joblib
+
