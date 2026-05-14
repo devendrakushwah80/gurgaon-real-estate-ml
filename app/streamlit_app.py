@@ -37,7 +37,7 @@ def load_css() -> None:
 def initialize_session_state() -> None:
     """Initialize frontend runtime state."""
 
-    st.session_state.setdefault("api_base_url", "http://127.0.0.1:8001")
+    st.session_state.setdefault("api_base_url", "https://gurgaon-real-estate-ml-production.up.railway.app")
     st.session_state.setdefault("api_timeout", 8.0)
     st.session_state.setdefault("active_page", "dashboard")
     st.session_state.setdefault("recent_predictions", [])
