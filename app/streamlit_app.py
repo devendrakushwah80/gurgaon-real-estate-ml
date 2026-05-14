@@ -1,14 +1,13 @@
-import sys
-from pathlib import Path
-
-ROOT_DIR = Path(__file__).resolve().parent.parent
-sys.path.append(str(ROOT_DIR))
 """Premium Streamlit frontend for the Gurgaon Real Estate ML platform."""
 
 from __future__ import annotations
 
 from pathlib import Path
+import sys
+from pathlib import Path
 
+ROOT_DIR = Path(__file__).resolve().parent.parent
+sys.path.append(str(ROOT_DIR))
 import streamlit as st
 
 from app.components.sidebar import render_sidebar
