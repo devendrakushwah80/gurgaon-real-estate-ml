@@ -15,7 +15,10 @@ def get_api_client() -> ApiClient:
     """Return the configured API client."""
 
     return ApiClient(
-        base_url=st.session_state.get("api_base_url", "https://gurgaon-real-estate-ml-production.up.railway.app"),
+        base_url=st.session_state.get(
+            "api_base_url",
+            "https://gurgaon-real-estate-ml.onrender.com",
+        ),
         timeout=float(st.session_state.get("api_timeout", 8.0)),
     )
 
