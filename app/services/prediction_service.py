@@ -14,25 +14,16 @@ from app.services.api_client import ApiClient, ApiClientError
 def get_api_client() -> ApiClient:
     """Return the configured API client."""
 
-<<<<<<< HEAD
-    return ApiClient(
-        base_url=st.session_state.get(
-            "api_base_url",
-            "https://gurgaon-real-estate-ml.onrender.com",
-        ),
-        timeout=float(st.session_state.get("api_timeout", 8.0)),
-    )
-=======
     base_url = st.session_state.get("api_base_url")
     kwargs = {}
+
     if base_url:
         kwargs["base_url"] = base_url
+
     if "api_timeout" in st.session_state:
         kwargs["timeout"] = float(st.session_state["api_timeout"])
 
     return ApiClient(**kwargs)
-
->>>>>>> c429858 (Production deployment)
 
 
 def predict(payload: dict[str, Any]) -> float:
@@ -56,14 +47,17 @@ def batch_predict(records: list[dict[str, Any]]) -> list[float]:
 
     if not records:
         raise ApiClientError("Upload contains no records.")
+
     response = get_api_client().post("/batch_predict", {"records": records})
     return [float(value) for value in response["predicted_price_crore"]]
 
 
-def prepare_batch_download(uploaded: pd.DataFrame, predictions: list[float]) -> pd.DataFrame:
+def prepare_batch_download(
+    uploaded: pd.DataFrame,
+    predictions: list[float],
+) -> pd.DataFrame:
     """Attach predictions to uploaded input data."""
 
     output = uploaded.copy()
     output["predicted_price_crore"] = predictions
     return output
-
