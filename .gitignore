@@ -10,6 +10,15 @@ venv/
 *.log
 *.out
 *.err
+logs_*/
+
+# Generated/local reports
+/REPORT.md
+/*_REPORT.md
+/SURE_TRUST_COMPLETED_REPORT.md
+
+# Local notebooks
+.ipynb_checkpoints/
 
 # Pytest
 .pytest_cache/
@@ -22,6 +31,11 @@ venv/
 
 # Streamlit cache
 .streamlit/secrets.toml
+
+# Environment files
+.env
+.env.*
+!.env.example
 
 # OS
 .DS_Store

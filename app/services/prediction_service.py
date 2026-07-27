@@ -14,6 +14,7 @@ from app.services.api_client import ApiClient, ApiClientError
 def get_api_client() -> ApiClient:
     """Return the configured API client."""
 
+<<<<<<< HEAD
     return ApiClient(
         base_url=st.session_state.get(
             "api_base_url",
@@ -21,6 +22,17 @@ def get_api_client() -> ApiClient:
         ),
         timeout=float(st.session_state.get("api_timeout", 8.0)),
     )
+=======
+    base_url = st.session_state.get("api_base_url")
+    kwargs = {}
+    if base_url:
+        kwargs["base_url"] = base_url
+    if "api_timeout" in st.session_state:
+        kwargs["timeout"] = float(st.session_state["api_timeout"])
+
+    return ApiClient(**kwargs)
+
+>>>>>>> c429858 (Production deployment)
 
 
 def predict(payload: dict[str, Any]) -> float:

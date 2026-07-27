@@ -2,14 +2,21 @@
 
 from __future__ import annotations
 
+import os
 import time
 from dataclasses import dataclass
 from typing import Any
 
 import requests
 
+<<<<<<< HEAD
 DEFAULT_API_BASE_URL = "https://gurgaon-real-estate-ml.onrender.com"
 DEFAULT_TIMEOUT_SECONDS = 8.0
+=======
+DEFAULT_API_BASE_URL = os.getenv("BACKEND_URL", os.getenv("API_BASE_URL", "http://127.0.0.1:8000"))
+DEFAULT_TIMEOUT_SECONDS = float(os.getenv("API_TIMEOUT_SECONDS", "8.0"))
+
+>>>>>>> c429858 (Production deployment)
 
 
 class ApiClientError(RuntimeError):

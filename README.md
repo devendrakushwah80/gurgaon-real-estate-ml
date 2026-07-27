@@ -87,6 +87,27 @@ Current validation metrics:
 - MAE: `0.5304 Cr`
 - RMSE: `1.1727 Cr`
 
+## Cloud Deployment (Render & Streamlit Cloud)
+
+### 1. Backend API Deployment (Render)
+1. Log in to [Render](https://render.com) and create a **New Web Service**.
+2. Connect your GitHub repository (`devendrakushwah80/gurgaon-real-estate-ml`).
+3. Render automatically reads `render.yaml` or set the following settings:
+   - **Environment**: `Python 3`
+   - **Build Command**: `pip install -r requirements.txt`
+   - **Start Command**: `uvicorn app.api:api --host 0.0.0.0 --port $PORT`
+4. Deploy the service and copy your live Render service URL (e.g., `https://gurgaon-real-estate-backend.onrender.com`).
+
+### 2. Frontend App Deployment (Streamlit Cloud)
+1. Log in to [Streamlit Community Cloud](https://streamlit.io/cloud) and click **New App**.
+2. Select your GitHub repository (`devendrakushwah80/gurgaon-real-estate-ml`), branch `main`.
+3. Set **Main file path** to: `app/streamlit_app.py`.
+4. Under **Advanced settings / Secrets**, add your Render backend URL:
+   ```toml
+   BACKEND_URL = "https://gurgaon-real-estate-backend.onrender.com"
+   ```
+5. Click **Deploy!** Any new commits pushed to `main` on GitHub will automatically trigger deployments on both Render and Streamlit Cloud.
+
 ## Documentation
 
 - `PROJECT_ANALYSIS.md`
@@ -97,3 +118,4 @@ Current validation metrics:
 - `MODEL_REPORT.md`
 - `DEPLOYMENT_GUIDE.md`
 - `FINAL_REFACTOR_SUMMARY.md`
+

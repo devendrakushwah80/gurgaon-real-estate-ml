@@ -6,6 +6,7 @@ from typing import Any
 
 import pandas as pd
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, ConfigDict, Field
 
 from app.prediction.service import batch_predict as run_batch_predict
@@ -14,6 +15,15 @@ from app.recommender.service import recommend, similar_properties
 from src.features.selection import MODEL_FEATURES
 
 api = FastAPI(title="Gurgaon Real Estate ML API", version="1.0.0")
+
+api.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 
 
 class PropertyFeatures(BaseModel):

@@ -10,6 +10,8 @@ ROOT_DIR = Path(__file__).resolve().parent.parent
 sys.path.append(str(ROOT_DIR))
 import streamlit as st
 
+import os
+
 from app.components.sidebar import render_sidebar
 from app.pages import (
     analytics,
@@ -37,10 +39,19 @@ def load_css() -> None:
 def initialize_session_state() -> None:
     """Initialize frontend runtime state."""
 
-    st.session_state.setdefault("api_base_url", "https://gurgaon-real-estate-ml-production.up.railway.app")
+    secrets_url = None
+    try:
+        if hasattr(st, "secrets") and "BACKEND_URL" in st.secrets:
+            secrets_url = st.secrets["BACKEND_URL"]
+    except Exception:  # noqa: BLE001 - Streamlit raises if secrets file missing
+        pass
+
+    default_backend_url = os.getenv("BACKEND_URL", os.getenv("API_BASE_URL", secrets_url or "http://127.0.0.1:8000"))
+    st.session_state.setdefault("api_base_url", default_backend_url)
     st.session_state.setdefault("api_timeout", 8.0)
     st.session_state.setdefault("active_page", "dashboard")
     st.session_state.setdefault("recent_predictions", [])
+
 
 
 def main() -> None:
