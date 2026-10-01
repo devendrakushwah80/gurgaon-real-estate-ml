@@ -1,0 +1,64 @@
+{
+  "status": "complete",
+  "created_at": "2026-10-01T08:27:04.612523+00:00",
+  "data_path": "C:\\Project\\gurgaon-real-estate-ml-main\\data\\processed\\verified_current_city_listings.csv",
+  "artifact": "C:\\Project\\gurgaon-real-estate-ml-main\\models\\fresh_city_models.joblib",
+  "cities": {
+    "gurgaon": {
+      "rows": 31,
+      "status": "trained",
+      "test_rows": 7,
+      "metrics": {
+        "r2": 0.23265653999083102,
+        "mae": 1.128878164166468,
+        "rmse": 1.2368537674339293
+      }
+    },
+    "indore": {
+      "rows": 36,
+      "status": "trained",
+      "test_rows": 8,
+      "metrics": {
+        "r2": 0.5107043390826209,
+        "mae": 0.6502087735099925,
+        "rmse": 1.2207133192893442
+      }
+    }
+  },
+  "overall": {
+    "r2": 0.6522749349149614,
+    "mae": 0.8735878224830145,
+    "rmse": 1.2282719231297223
+  },
+  "historical_baseline": {
+    "r2": 0.8211,
+    "mae": 0.5304,
+    "rmse": 1.1727
+  },
+  "comparison": {
+    "improvement_claimed": false,
+    "reason": "The historical baseline uses an older Gurgaon dataset and fixed split; fresh rows are current asking-price observations with a different population and city coverage."
+  },
+  "leakage_controls": {
+    "excluded_target_derived_fields": [
+      "price_per_sqft",
+      "listing_price",
+      "raw source price fields"
+    ],
+    "model_features": [
+      "property_type",
+      "sector",
+      "bedRoom",
+      "bathroom",
+      "balcony",
+      "agePossession",
+      "built_up_area",
+      "servant room",
+      "store room",
+      "furnishing_type",
+      "luxury_category",
+      "floor_category"
+    ],
+    "city_routing": "separate model per canonical city; no city mixing inside city models"
+  }
+}

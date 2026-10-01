@@ -22,6 +22,8 @@ def get_api_client() -> ApiClient:
 
     if "api_timeout" in st.session_state:
         kwargs["timeout"] = float(st.session_state["api_timeout"])
+    if st.session_state.get("access_token"):
+        kwargs["access_token"] = st.session_state["access_token"]
 
     return ApiClient(**kwargs)
 

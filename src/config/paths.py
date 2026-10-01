@@ -18,7 +18,10 @@ METRICS_DIR = REPORTS_DIR / "metrics"
 FIGURES_DIR = REPORTS_DIR / "figures"
 CONFIG_DIR = PROJECT_ROOT / "configs"
 
-DEFAULT_TRAINING_DATA = PROCESSED_DATA_DIR / "gurgaon_properties_post_feature_selection_v2.csv"
+# v2 is an exported feature-only table without the target column. The selected
+# table is the compatible training/inference source and preserves the existing
+# model contract.
+DEFAULT_TRAINING_DATA = PROCESSED_DATA_DIR / "gurgaon_properties_post_feature_selection.csv"
 DEFAULT_MODEL_PATH = MODEL_DIR / "price_model.joblib"
 DEFAULT_MODEL_METADATA_PATH = MODEL_DIR / "model_metadata.json"
 DEFAULT_METRICS_PATH = METRICS_DIR / "model_metrics.json"
@@ -31,4 +34,3 @@ def ensure_project_dirs() -> None:
 
     for path in [MODEL_DIR, METRICS_DIR, FIGURES_DIR]:
         path.mkdir(parents=True, exist_ok=True)
-

@@ -116,7 +116,11 @@ def recommendation_cards(records: Iterable[dict[str, Any]]) -> None:
         score = item.get("score")
         score_text = f"{float(score) * 100:.1f}%" if isinstance(score, int | float) else "N/A"
         link = item.get("link")
-        link_html = f'<a class="muted-link" href="{escape(str(link))}" target="_blank">View source</a>' if link else ""
+        link_html = (
+            f'<a class="muted-link" href="{escape(str(link))}" target="_blank">View source</a>'
+            if link
+            else ""
+        )
         amenity_html = "".join(f'<span class="tag">{amenity}</span>' for amenity in amenities)
         st.markdown(
             f"""
@@ -149,3 +153,49 @@ def empty_state(title: str, body: str) -> None:
         """,
         unsafe_allow_html=True,
     )
+
+
+def intelligence_cards(records: Iterable[dict[str, Any]]) -> None:
+    """Render source-attributed property intelligence cards."""
+
+    for item in records:
+        valuation = item.get("valuation", {})
+        trust = item.get("trust", {})
+        investment = item.get("investment", {})
+        image_urls = item.get("images") or []
+        image_html = (
+            f'<img class="property-thumb" src="{escape(str(image_urls[0]))}" alt="Property source image" />'
+            if image_urls
+            else '<div class="property-thumb property-placeholder">Image unavailable in source data</div>'
+        )
+        source = escape(str(item.get("source") or "Source data"))
+        link = item.get("source_url")
+        link_html = (
+            f'<a class="muted-link" href="{escape(str(link))}" target="_blank" rel="noopener">Open original listing</a>'
+            if link
+            else '<span class="muted-link">Original listing URL unavailable</span>'
+        )
+        difference = valuation.get("difference_percent")
+        difference_text = (
+            f"{abs(difference):.1f}% {'below' if difference < 0 else 'above'} estimated fair value"
+            if isinstance(difference, (int, float))
+            else "Fair-value comparison unavailable"
+        )
+        st.markdown(
+            f"""
+            <div class="property-card">
+                {image_html}
+                <div class="property-card-body">
+                    <div class="property-card-top"><span class="source-badge">{source}</span><span class="score-pill">Trust {trust.get("score", "—")}/100</span></div>
+                    <div class="recommendation-title">{escape(str(item.get("title") or "Property"))}</div>
+                    <div class="recommendation-meta">{escape(str(item.get("locality") or "Gurgaon"))} · {escape(str(item.get("bhk") or "—"))} BHK · {escape(str(item.get("area_sqft") or "—"))} sqft</div>
+                    <div class="property-price-row"><strong>₹{float(item.get("listing_price") or 0):.2f} Cr</strong><span>Fair value ₹{float(valuation.get("fair_value") or 0):.2f} Cr</span></div>
+                    <div class="tag-row"><span class="tag locality-tag">{escape(str(trust.get("label") or "Confidence unavailable"))}</span><span class="tag">Investment {investment.get("score", "—")}/100</span></div>
+                    <div class="recommendation-meta">{escape(difference_text)}</div>
+                    <div class="recommendation-meta">{escape(str(item.get("recommendation_reason") or "Source-backed market signals"))}</div>
+                    {link_html}
+                </div>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )

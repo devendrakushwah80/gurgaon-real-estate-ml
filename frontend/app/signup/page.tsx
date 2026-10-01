@@ -1,0 +1,15 @@
+"use client";
+
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { FormEvent, useState } from "react";
+import { api } from "@/lib/api";
+import { friendlyError, useAuth } from "@/components/auth-provider";
+import { Logo } from "@/components/header";
+
+export default function SignupPage() {
+  const router = useRouter(); const { signIn } = useAuth();
+  const [name, setName] = useState(""); const [email, setEmail] = useState(""); const [password, setPassword] = useState(""); const [confirm, setConfirm] = useState(""); const [error, setError] = useState(""); const [loading, setLoading] = useState(false);
+  async function submit(event: FormEvent) { event.preventDefault(); setError(""); if (password !== confirm) { setError("Passwords do not match."); return; } setLoading(true); try { await api.signup(name, email, password); await signIn(email, password); router.push("/dashboard"); } catch (e) { setError(friendlyError(e)); } finally { setLoading(false); } }
+  return <div className="auth-layout"><aside className="auth-aside"><Logo /><div className="auth-quote"><div className="eyebrow">Start with context</div><h1>Explore property with a better brief.</h1><p>Create a private EstateIQ account to save properties, set preferences and make comparisons easier.</p></div><div className="auth-foot">New accounts start as standard users.</div></aside><main className="auth-main"><div className="auth-card"><div className="eyebrow">Create account</div><h2>Your next search starts here.</h2><p>It takes less than a minute. You can update your preferences anytime.</p><form className="auth-form" onSubmit={submit}>{error && <div className="form-error" role="alert">{error}</div>}<div className="form-group"><label className="form-label" htmlFor="full-name">Full name</label><input className="form-input" id="full-name" value={name} onChange={(e) => setName(e.target.value)} required /></div><div className="form-group"><label className="form-label" htmlFor="signup-email">Email</label><input className="form-input" id="signup-email" type="email" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} required /></div><div className="form-group"><label className="form-label" htmlFor="signup-password">Password</label><input className="form-input" id="signup-password" type="password" minLength={8} autoComplete="new-password" value={password} onChange={(e) => setPassword(e.target.value)} required /><span className="form-help">Use at least 8 characters with letters and numbers.</span></div><div className="form-group"><label className="form-label" htmlFor="confirm-password">Confirm password</label><input className="form-input" id="confirm-password" type="password" autoComplete="new-password" value={confirm} onChange={(e) => setConfirm(e.target.value)} required /></div><button className="button button-dark" disabled={loading}>{loading ? "Creating account…" : "Create account"}</button></form><div className="auth-switch">Already have an account? <Link href="/login">Sign in</Link></div></div></main></div>;
+}

@@ -9,14 +9,8 @@ from typing import Any
 
 import requests
 
-
-DEFAULT_API_BASE_URL = os.getenv(
-    "BACKEND_URL",
-    os.getenv("API_BASE_URL", "http://127.0.0.1:8000")
-)
-DEFAULT_TIMEOUT_SECONDS = float(
-    os.getenv("API_TIMEOUT_SECONDS", "8.0")
-)
+DEFAULT_API_BASE_URL = os.getenv("BACKEND_URL", os.getenv("API_BASE_URL", "http://127.0.0.1:8000"))
+DEFAULT_TIMEOUT_SECONDS = float(os.getenv("API_TIMEOUT_SECONDS", "8.0"))
 
 
 class ApiClientError(RuntimeError):
@@ -36,9 +30,18 @@ class ApiHealth:
 class ApiClient:
     """Small typed wrapper around backend HTTP endpoints."""
 
-    def __init__(self, base_url: str = DEFAULT_API_BASE_URL, timeout: float = DEFAULT_TIMEOUT_SECONDS) -> None:
+    def __init__(
+        self,
+        base_url: str = DEFAULT_API_BASE_URL,
+        timeout: float = DEFAULT_TIMEOUT_SECONDS,
+        access_token: str | None = None,
+    ) -> None:
         self.base_url = base_url.rstrip("/")
         self.timeout = timeout
+        self.access_token = access_token
+
+    def _headers(self) -> dict[str, str]:
+        return {"Authorization": f"Bearer {self.access_token}"} if self.access_token else {}
 
     def health(self) -> ApiHealth:
         """Check API health and measure response time."""
@@ -66,12 +69,30 @@ class ApiClient:
                 f"{self.base_url}{path}",
                 json=payload,
                 timeout=self.timeout,
+                headers=self._headers(),
             )
             response.raise_for_status()
             return response.json()
         except requests.HTTPError as exc:
             detail = _extract_error(response)
             raise ApiClientError(detail) from exc
+        except requests.RequestException as exc:
+            raise ApiClientError(f"Backend request failed: {exc}") from exc
+
+    def get(self, path: str, params: dict[str, Any] | None = None) -> dict[str, Any]:
+        """Send a GET request and return the decoded response."""
+
+        try:
+            response = requests.get(
+                f"{self.base_url}{path}",
+                params=params,
+                timeout=self.timeout,
+                headers=self._headers(),
+            )
+            response.raise_for_status()
+            return response.json()
+        except requests.HTTPError as exc:
+            raise ApiClientError(_extract_error(response)) from exc
         except requests.RequestException as exc:
             raise ApiClientError(f"Backend request failed: {exc}") from exc
 
@@ -82,4 +103,3 @@ def _extract_error(response: requests.Response) -> str:
         return str(body.get("detail") or body)
     except ValueError:
         return response.text or f"HTTP {response.status_code}"
-

@@ -37,6 +37,17 @@ logs_*/
 .env.*
 !.env.example
 
+# Next.js frontend
+frontend/node_modules/
+frontend/.next/
+frontend/.env.local
+frontend/tsconfig.tsbuildinfo
+
+# Local ingestion run receipts
+data/ingestion/runs/
+debug/99acres/
+data/estateiq.db*
+
 # OS
 .DS_Store
 Thumbs.db
